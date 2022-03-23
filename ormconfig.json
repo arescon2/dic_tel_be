@@ -1,0 +1,16 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "postgres",
+  "password": "root",
+  "database": "misv3",
+  "entities": ["dist/entityes/**/*.entity{.ts,.js}"],
+  "migrationsTableName": "migrations",
+  "migrations": ["dist/migrations/*.js"],
+  "cli": {
+    "migrationsDir": "src/migrations"
+  },
+  "autoLoadEntities": true,
+  "synchronize": false
+}

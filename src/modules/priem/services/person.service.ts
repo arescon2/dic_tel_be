@@ -55,9 +55,6 @@ export class PersonService {
     data.uid = uuidv4();
     data.dateCreate = new Date(Date.now());
 
-    if (data.dateBirth)
-      data.dateBirth = moment(data.dateBirth, process.env.DATE_FORMAT).toDate();
-
     return this.PersonRep.save(data);
   }
 
@@ -67,8 +64,7 @@ export class PersonService {
 
     data.dateUpd = new Date(Date.now());
 
-    if (data.dateBirth)
-      data.dateBirth = moment(data.dateBirth, process.env.DATE_FORMAT).toDate();
+    if (data.dateBirth) data.dateBirth = data.dateBirth;
 
     return this.PersonRep.save(data);
   }

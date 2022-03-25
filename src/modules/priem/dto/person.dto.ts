@@ -13,13 +13,19 @@ export class PersonCreateDto extends RootDto {
   @IsNotEmpty({
     message: 'Поле Имя не может быть пустым',
   })
-  name: string;
+  im: string;
 
   @ApiProperty({ required: false })
   otch?: string;
 
   @ApiProperty({ required: false })
   dateBirth?: Date;
+
+  @ApiProperty({ required: false })
+  sex?: Date;
+
+  @ApiProperty({ required: false })
+  sexName?: Date;
 }
 
 export class PersonUpdDto {

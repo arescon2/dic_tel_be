@@ -4,7 +4,7 @@
   "port": 5432,
   "username": "postgres",
   "password": "root",
-  "database": "misv3",
+  "database": "cahobase",
   "entities": ["dist/entityes/**/*.entity{.ts,.js}"],
   "migrationsTableName": "migrations",
   "migrations": ["dist/migrations/*.js"],

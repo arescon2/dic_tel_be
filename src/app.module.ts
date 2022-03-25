@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 
 import { AuthModule } from './modules/auth/auth.module';
 import { CoreModule } from './modules/core/core.module';
+import { DicsModule } from './modules/dics/dics.module';
 import { PriemModule } from './modules/priem/priem.module';
 
 @Module({
@@ -15,6 +16,7 @@ import { PriemModule } from './modules/priem/priem.module';
     AuthModule,
     PriemModule,
     CoreModule,
+    DicsModule,
     // modules
   ],
   controllers: [AppController],

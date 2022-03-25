@@ -4,6 +4,7 @@ import { Root } from 'src/entityes/root.entity';
 import { Person } from '../priem/person.entity';
 import { ApiProperty } from '@nestjs/swagger';
 import { Roles } from './roles.entity';
+import { Organization } from '../dics/organizations.entity';
 
 @Entity({
   schema: 'auth',
@@ -35,6 +36,11 @@ export class Accaunt extends Root implements IAccaunt {
   @OneToOne(() => Person)
   @JoinColumn()
   person?: Person;
+
+  @ApiProperty()
+  @OneToOne(() => Organization)
+  @JoinColumn()
+  organization?: Organization;
 
   @Column({ default: false })
   exclude: boolean;

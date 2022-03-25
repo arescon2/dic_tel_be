@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class init1647919963458 implements MigrationInterface {
-  name = 'init1647919963458';
+export class init1648004546309 implements MigrationInterface {
+  name = 'init1648004546309';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -18,9 +18,6 @@ export class init1647919963458 implements MigrationInterface {
     );
     await queryRunner.query(
       `CREATE TABLE "auth"."accaunt" ("id" SERIAL NOT NULL, "uid" character varying NOT NULL, "dateCreate" TIMESTAMP NOT NULL, "dateUpd" TIMESTAMP, "isActive" boolean NOT NULL DEFAULT true, "email" character varying NOT NULL, "phone" integer, "login" character varying NOT NULL, "password" character varying NOT NULL, "exclude" boolean NOT NULL DEFAULT false, "personId" integer, CONSTRAINT "REL_87a2c4b4c33b4731522961f76d" UNIQUE ("personId"), CONSTRAINT "PK_376e43fa2d7f4a96eaf15b51ddc" PRIMARY KEY ("id"))`,
-    );
-    await queryRunner.query(
-      `CREATE TABLE "auth"."organization" ("id" SERIAL NOT NULL, "uid" character varying NOT NULL, "dateCreate" TIMESTAMP NOT NULL, "dateUpd" TIMESTAMP, "isActive" boolean NOT NULL DEFAULT true, "parent" integer, "owner" character varying, "frmo" character varying, "resource_id" character varying, "code_foms" character varying, "shortname" character varying, "name" character varying NOT NULL, "type" character varying NOT NULL, "address_legal" character varying, "address_actual" character varying, "inn" character varying, "ogrn" character varying, "phone" character varying, "logo" character varying, "fio_glavbuh" character varying, "fio_director" character varying, CONSTRAINT "PK_472c1f99a32def1b0abb219cd67" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "files" ("id" SERIAL NOT NULL, "uid" character varying NOT NULL, "dateCreate" TIMESTAMP NOT NULL, "dateUpd" TIMESTAMP, "isActive" boolean NOT NULL DEFAULT true, "name" character varying NOT NULL, "originalname" character varying NOT NULL, "type" character varying NOT NULL, "path" character varying NOT NULL, "size" integer NOT NULL, CONSTRAINT "PK_6c16b9093a142e0e7613b04a3d9" PRIMARY KEY ("id"))`,
@@ -91,7 +88,6 @@ export class init1647919963458 implements MigrationInterface {
     );
     await queryRunner.query(`DROP TABLE "auth"."roles_accesses_accesses"`);
     await queryRunner.query(`DROP TABLE "files"`);
-    await queryRunner.query(`DROP TABLE "auth"."organization"`);
     await queryRunner.query(`DROP TABLE "auth"."accaunt"`);
     await queryRunner.query(`DROP TABLE "auth"."roles"`);
     await queryRunner.query(`DROP TABLE "auth"."accesses"`);

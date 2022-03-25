@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpStatus,
   Post,
@@ -8,22 +9,22 @@ import {
   Query,
   Res,
   UseGuards,
-  UseInterceptors,
   UsePipes,
   ValidationPipe,
+  ParseIntPipe,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import moment from 'moment';
 import { Person } from 'src/entityes/priem/person.entity';
 import { PaginFilterOrderClass } from 'src/rootDto/dtos';
+import { IdDto } from 'src/rootDto/idDto';
 import { JwtAuthGuard } from '../../auth/jwt-auth.guard';
 import { Roles } from '../../auth/roles.decorator';
 import { RolesGuard } from '../../auth/roles.guard';
-import { PersonCreateDto, PersonGetDto, PersonUpdDto } from '../dto/person.dto';
+import { PersonCreateDto, PersonUpdDto } from '../dto/person.dto';
 import { PersonService } from '../services/person.service';
 
-@ApiTags('Прием')
+@ApiTags('Пользователи')
 @Controller('person')
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('ADMIN')
@@ -54,6 +55,7 @@ export class PersonController {
   }
 
   @Post()
+  @Roles('ADMIN')
   @ApiCreatedResponse({ type: Person })
   @UsePipes(new ValidationPipe())
   async createPerson(@Body() data: PersonCreateDto): Promise<any> {
@@ -61,11 +63,48 @@ export class PersonController {
   }
 
   @Put()
+  @Roles('ADMIN')
   @UsePipes(new ValidationPipe())
   async updPerson(
     @Body() data: PersonUpdDto,
     @Res() res: Response,
   ): Promise<any> {
-    return this.personServ.updPerson(data);
+    const person = await this.personServ.updPerson(data);
+
+    res.status(HttpStatus.OK).send({
+      message: 'ok',
+      data: person,
+    });
+  }
+
+  @Delete()
+  @ApiQuery({ type: IdDto })
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @Roles('ADMIN')
+  async deleteFile(
+    @Query() query: IdDto,
+    @Res() response: Response,
+  ): Promise<any> {
+    if (query.id === 1) {
+      response.status(HttpStatus.BAD_REQUEST).json({
+        message: 'error',
+        data: 'Данного пользователя удалить нельзя!',
+      });
+    } else {
+      await this.personServ
+        .DelOne(query.id)
+        .then((res) => {
+          response.status(HttpStatus.OK).json({
+            message: 'ok',
+            data: res,
+          });
+        })
+        .catch((error) => {
+          response.status(HttpStatus.BAD_REQUEST).json({
+            message: 'error',
+            data: error,
+          });
+        });
+    }
   }
 }

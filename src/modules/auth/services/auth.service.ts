@@ -240,6 +240,7 @@ export class AuthService {
       .offset(page)
       .orderBy(ordering)
       .select([
+        'acc.uid',
         'acc.id',
         'acc.login',
         'acc.dateCreate',

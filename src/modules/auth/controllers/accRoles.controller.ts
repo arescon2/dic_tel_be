@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { ApiQuery, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { IdDto } from 'src/rootDto/idDto';
+import { IdAndUserIdDto, IdDto } from 'src/rootDto/idDto';
 import { PaginFilterOrderClass } from 'src/rootDto/dtos';
 import { AddRolesToUserDto } from '../dto/auth';
 import { JwtAuthGuard } from '../jwt-auth.guard';
@@ -24,7 +24,7 @@ import { AuthService } from '../services/auth.service';
 @Controller('accaunt')
 @UseGuards(JwtAuthGuard)
 export class AccauntController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService ) {}
 
   // получение всех аккаунтов
   @Get()
@@ -39,7 +39,7 @@ export class AccauntController {
       limit,
       orderby,
       order,
-      filters,
+      filters ? JSON.parse(filters) : {},
     );
 
     res.status(HttpStatus.OK).send({
@@ -47,6 +47,25 @@ export class AccauntController {
       data: arrayAccaunt[0],
       count: arrayAccaunt[1],
     });
+  }
+
+  // To Do: сделать DTO
+  @Post()
+  @ApiQuery({ type: IdAndUserIdDto })
+  @UsePipes(new ValidationPipe())
+  async createAcc(): Promise<any> {
+    // создаем Персона для админа
+    const hash = await this.authService.hashedPassword('admin');
+
+    // создаем аккаунт админа
+    await this.authService.createUser({
+      login: 'admin',
+      password: hash,
+      email: 'admin@admin.com',
+      person: adminPerson,
+      roles: [role],
+    });
+    return 'ok';
   }
 
   // добавление роли для аккаунта
@@ -58,10 +77,10 @@ export class AccauntController {
 
   // удаление роли аккаунта
   @Delete('/roles')
-  @ApiQuery({ type: IdDto })
+  @ApiQuery({ type: IdAndUserIdDto })
   @UsePipes(new ValidationPipe())
   async deleteRole(
-    @Query() query: IdDto,
+    @Query() query: IdAndUserIdDto,
     @Res() response: Response,
   ): Promise<any> {
     await this.authService

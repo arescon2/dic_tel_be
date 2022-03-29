@@ -13,7 +13,7 @@ import { IAccaunt } from 'src/modules/auth/interfaces/accaunt.i';
 import { Accaunt } from 'src/entityes/auth/accaunt.entity';
 import { IError, IErrorAndData } from 'src/interfaces/error.i';
 import { jwtConstants } from '../constants';
-import { LoginPassDto } from '../dto/auth';
+import { LoginPassDto } from '../dto/auth.dto';
 import { TAKE } from 'src/constants';
 import _ from 'lodash';
 import { encode, decode } from 'js-base64';
@@ -178,6 +178,63 @@ export class AuthService {
     });
   }
 
+  // accaunt[]
+  async findPagination(
+    page?: number,
+    take?: number,
+    orderby?: string,
+    order?: number,
+    filters?: IAccaunt,
+  ): Promise<[IAccaunt[], number]> {
+    take = take || TAKE;
+    page = page - 1 || 0;
+
+    const ordering = {};
+
+    let andWhereVar = '';
+    const andWhereObj = {};
+
+    if (filters) {
+      if (filters.id) {
+        andWhereVar += 'acc.id = :id';
+        andWhereObj['id'] = filters.id;
+      }
+      if (filters.person) {
+        andWhereVar += 'acc.person = :person';
+        andWhereObj['person'] = filters.person;
+      }
+    }
+
+    const result = await this.AccRep.createQueryBuilder('acc')
+      .leftJoinAndSelect('acc.person', 'person')
+      .leftJoinAndSelect('acc.organization', 'org')
+      .leftJoinAndSelect('acc.roles', 'roles')
+      .where(andWhereVar, andWhereObj)
+      .take(take)
+      .offset(page)
+      .orderBy(ordering)
+      .select([
+        'acc.uid',
+        'acc.id',
+        'acc.login',
+        'acc.dateCreate',
+        'acc.dateUpd',
+        'acc.email',
+        'acc.phone',
+        'acc.isActive',
+        'org.id',
+        'person.id',
+        'person.fam',
+        'person.im',
+        'roles.id',
+        'roles.name',
+        'roles.title',
+      ])
+      .getManyAndCount();
+
+    return result;
+  }
+
   async createUser(data: any): Promise<IAccaunt> {
     data.uid = uuidv4();
     data.dateCreate = new Date(Date.now());
@@ -210,52 +267,5 @@ export class AuthService {
     accaunt.dateUpd = new Date(Date.now());
 
     return this.AccRep.save(accaunt);
-  }
-
-  async delRoleToUser(id: number, userid: number): Promise<any> {
-    // сначала получить аккаунт с ролями
-    return 'ok';
-  }
-
-  async findPagination(
-    page?: number,
-    take?: number,
-    orderby?: string,
-    order?: number,
-    filters?: string,
-  ): Promise<[IAccaunt[], number]> {
-    take = take || TAKE;
-    page = page - 1 || 0;
-
-    const ordering = {};
-
-    if (orderby) {
-      ordering[orderby] = order;
-    }
-
-    const result = await this.AccRep.createQueryBuilder('acc')
-      .leftJoinAndSelect('acc.person', 'person')
-      .leftJoinAndSelect('acc.roles', 'roles')
-      .take(take)
-      .offset(page)
-      .orderBy(ordering)
-      .select([
-        'acc.uid',
-        'acc.id',
-        'acc.login',
-        'acc.dateCreate',
-        'acc.dateUpd',
-        'acc.email',
-        'acc.phone',
-        'person.id',
-        'person.fam',
-        'person.im',
-        'roles.id',
-        'roles.name',
-        'roles.title',
-      ])
-      .getManyAndCount();
-
-    return result;
   }
 }

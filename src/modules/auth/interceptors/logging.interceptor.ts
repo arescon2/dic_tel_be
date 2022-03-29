@@ -22,8 +22,11 @@ export class LoggingInterceptor implements NestInterceptor {
           case 'GET':
             console.log(request.path, request.method, timeoutRequest);
             break;
+          case 'POST':
+            console.log(request.path, request.method, timeoutRequest);
+            break;
           default:
-            // console.log(request.patch);
+            console.log(request.path, request.method, timeoutRequest);
             break;
         }
       }),

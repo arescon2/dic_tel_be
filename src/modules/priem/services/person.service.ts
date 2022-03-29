@@ -43,10 +43,10 @@ export class PersonService {
     return result;
   }
 
-  async Find(data: any): Promise<Person[]> {
+  async Find(data: any): Promise<Person> {
     data.isActive = data.isActive || true;
 
-    return this.PersonRep.find(data);
+    return this.PersonRep.findOne(data);
   }
 
   async createPerson(data: any): Promise<Person> {

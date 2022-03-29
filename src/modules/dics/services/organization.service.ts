@@ -37,7 +37,6 @@ export class OrgsService {
 
     if (orderby) ordering[orderby] = order;
 
-    const whereVar = {};
     let andWhereVar = '';
     const andWhereObj = {};
 
@@ -60,6 +59,10 @@ export class OrgsService {
       .getManyAndCount();
 
     return result;
+  }
+
+  async Find(id: number): Promise<IOrganization> {
+    return this.OrgsRep.findOne({ id: id });
   }
 
   async createOrg(data: any): Promise<any> {

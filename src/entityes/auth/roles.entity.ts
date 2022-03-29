@@ -2,6 +2,7 @@ import { Entity, Column, ManyToMany, JoinTable } from 'typeorm';
 import { Root } from 'src/entityes/root.entity';
 import { Accesses } from './accesses.entity';
 import { IRoles } from 'src/modules/auth/interfaces/roles.i';
+import { Apps } from './apps.entity';
 
 @Entity({
   schema: 'auth',
@@ -17,16 +18,6 @@ export class Roles extends Root implements IRoles {
     nullable: true,
   })
   parent?: number;
-
-  @Column({
-    nullable: true,
-  })
-  nsiRoleId: number;
-
-  @Column({
-    nullable: true,
-  })
-  nsiRoleName: string;
 
   @ManyToMany(() => Accesses)
   @JoinTable()

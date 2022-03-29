@@ -8,6 +8,7 @@ export class IdDto {
   @IsNotEmpty({
     message: "Поле 'Id' не должен быть пустым",
   })
+  @IsInt()
   @Type(() => Number)
   id: number;
 }
@@ -17,5 +18,6 @@ export class IdAndUserIdDto extends IdDto {
   @IsNotEmpty({
     message: "Поле 'userId' не должен быть пустым",
   })
+  @Type(() => Number)
   userid: number;
 }

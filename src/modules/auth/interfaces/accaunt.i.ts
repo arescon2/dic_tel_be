@@ -1,6 +1,7 @@
 import { IRoot } from 'src/interfaces/root.i';
 import { IOrganization } from 'src/modules/dics/interfaces/organizations.i';
 import { IPerson } from 'src/modules/priem/interfaces/person.i';
+import { IApps } from './apps';
 import { IRoles } from './roles.i';
 
 export interface IAccaunt extends IRoot {
@@ -14,6 +15,7 @@ export interface IAccaunt extends IRoot {
   organization?: IOrganization;
 
   roles?: IRoles[];
+  apps?: IApps[];
 
   exclude: boolean; // можно использовать для админ вещей (чтобы не попадало в общие статистики и т.д.)
 }

@@ -52,5 +52,5 @@ export class AddRolesToUserDto {
     message: "Поле 'Роли' не должен быть пустым",
   })
   @IsArray()
-  roles: string[];
+  roles: number[];
 }

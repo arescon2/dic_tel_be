@@ -1,5 +1,6 @@
 import { IRoot } from 'src/interfaces/root.i';
 import { IAccess } from './access.i';
+import { IApps } from './apps';
 
 /**
  *  Объект Роли
@@ -16,8 +17,6 @@ export interface IRoles extends IRoot {
   name: string;
   title: string;
   parent?: number;
-  nsiRoleId?: number;
-  nsiRoleName?: string;
 
   accesses?: IAccess[];
 

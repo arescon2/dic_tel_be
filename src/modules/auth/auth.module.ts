@@ -13,18 +13,44 @@ import { AuthService } from './services/auth.service';
 import { RoleService } from './services/role.service';
 
 import { AuthController } from './controllers/auth.controller';
-import { AccauntController } from './controllers/accRoles.controller';
+import { AccauntController } from './controllers/accaunt.controller';
 import { RoleController } from './controllers/role.controller';
+import { OrgsService } from '../dics/services/organization.service';
+import { Organization } from 'src/entityes/dics/organizations.entity';
+import { Apps } from 'src/entityes/auth/apps.entity';
+import { AppsController } from './controllers/apps.controller';
+import { AppsService } from './services/apps.service';
+import { AccessesService } from './services/accesses.service';
+import { Accesses } from 'src/entityes/auth/accesses.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Accaunt, Person, Roles]),
+    TypeOrmModule.forFeature([
+      Accaunt,
+      Person,
+      Roles,
+      Organization,
+      Apps,
+      Accesses,
+    ]),
     JwtModule.register({
       secret: jwtConstants.secret,
     }),
   ],
-  controllers: [AuthController, AccauntController, RoleController],
-  providers: [AuthService, PersonService, RoleService],
+  controllers: [
+    AuthController,
+    AccauntController,
+    RoleController,
+    AppsController,
+  ],
+  providers: [
+    AuthService,
+    PersonService,
+    RoleService,
+    OrgsService,
+    AppsService,
+    AccessesService,
+  ],
   exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

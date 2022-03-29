@@ -9,7 +9,7 @@ import { TAKE } from 'src/constants';
 
 import { Roles } from 'src/entityes/auth/roles.entity';
 import { IRoles } from '../interfaces/roles.i';
-import { RoleCreateDto, RoleUpdDto } from '../dto/role';
+import { RoleCreateDto, RoleUpdDto } from '../dto/role.dto';
 
 @Injectable()
 export class RoleService {
@@ -23,7 +23,7 @@ export class RoleService {
     take?: number,
     orderby?: string,
     order?: number,
-    filters?: string,
+    filters?: IRoles,
   ): Promise<[IRoles[], number]> {
     take = take || TAKE;
     page = page - 1 || 0;
@@ -32,7 +32,18 @@ export class RoleService {
 
     if (orderby) ordering[orderby] = order;
 
+    let andWhereVar = '';
+    const andWhereObj = {};
+
+    if (filters) {
+      if (filters.id) {
+        andWhereVar += 'role.id = :id';
+        andWhereObj['id'] = filters.id;
+      }
+    }
+
     const result = await this.RoleRep.createQueryBuilder('role')
+      .where(andWhereVar, andWhereObj)
       .take(take)
       .offset(page)
       .orderBy(ordering)
@@ -50,10 +61,8 @@ export class RoleService {
     return this.RoleRep.save(data);
   }
 
-  async updRole(inData: any): Promise<any> {
-    let data = await this.RoleRep.findOne({ where: { id: inData.id } });
-
-    delete inData.id;
+  async updRole(id: number, inData: RoleUpdDto): Promise<any> {
+    let data = await this.RoleRep.findOne({ where: { id: id } });
 
     data = Object.assign(data, inData);
 

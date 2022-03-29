@@ -8,6 +8,7 @@ import {
   IsNumber,
   IsPhoneNumber,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class LoginPassDto extends RootDto {
   @ApiProperty()
@@ -23,20 +24,45 @@ export class LoginPassDto extends RootDto {
   password: string;
 }
 
+export class UpdateAccuntDto {
+  @ApiProperty({ required: false })
+  login?: string;
+
+  @ApiProperty({ required: false })
+  @Type(() => Boolean)
+  isActive?: boolean;
+
+  @ApiProperty({ required: false })
+  email?: string;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  organization?: number;
+}
+
 export class CreateAccauntDto extends LoginPassDto {
   @ApiProperty()
-  otch?: string;
+  @IsNotEmpty({
+    message: 'ID Пользователя не передан',
+  })
+  @Type(() => Number)
+  person: number;
 
   @ApiProperty()
   @IsNotEmpty({
-    message: "Поле 'Эл.Почта' не должен быть пустым",
+    message: "Поле 'Логин' не должен быть пустым",
   })
-  @IsEmail()
-  email: string;
+  login: string;
 
   @ApiProperty()
-  @IsPhoneNumber()
-  phone?: number;
+  @IsNotEmpty({
+    message: "Поле 'email' не должен быть пустым",
+  })
+  email: string;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  organization?: number;
 }
 
 export class AddRolesToUserDto {
@@ -44,13 +70,23 @@ export class AddRolesToUserDto {
   @IsNotEmpty({
     message: "Поле 'id' не должен быть пустым",
   })
-  @IsNumber()
+  @Type(() => Number)
   id: number;
 
   @ApiProperty()
-  @IsNotEmpty({
-    message: "Поле 'Роли' не должен быть пустым",
-  })
   @IsArray()
-  roles: string[];
+  roles: number[];
+}
+
+export class AddAppsToUserDto {
+  @ApiProperty()
+  @IsNotEmpty({
+    message: "Поле 'id' не должен быть пустым",
+  })
+  @Type(() => Number)
+  id: number;
+
+  @ApiProperty()
+  @IsArray()
+  apps: number[];
 }

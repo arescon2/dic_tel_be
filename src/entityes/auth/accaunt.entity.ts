@@ -19,15 +19,22 @@ import { Apps } from './apps.entity';
 })
 export class Accaunt extends Root implements IAccaunt {
   @Column()
-  @ApiProperty()
+  @Column({
+    unique: true,
+  })
   email: string;
 
   @ApiProperty()
-  @Column({ nullable: true })
+  @Column({
+    nullable: true,
+    unique: true,
+  })
   phone?: number;
 
   @ApiProperty()
-  @Column()
+  @Column({
+    unique: true,
+  })
   login: string;
 
   @Column()
@@ -44,11 +51,6 @@ export class Accaunt extends Root implements IAccaunt {
   @OneToOne(() => Person)
   @JoinColumn()
   person?: Person;
-
-  @ApiProperty()
-  @OneToOne(() => Organization)
-  @JoinColumn()
-  organization?: Organization;
 
   @ManyToMany(() => Apps)
   @JoinTable()

@@ -42,7 +42,17 @@ export class JwtAuthGuard implements CanActivate {
         const token = await this.authService.genJWT(user);
         const authCookies = await this.authService.getCookieWithJwtToken(token);
 
-        request.user = user;
+        const _user = user
+          ? {
+              uid: user.uid,
+              login: user.login,
+              email: user.email,
+              roles: user.roles,
+              person: user.person,
+              organization: user.organization,
+            }
+          : {};
+        request.user = _user;
 
         response.setHeader('Set-Cookie', [
           authCookies.access_cookie,

@@ -22,6 +22,7 @@ import { PersonService } from '../../priem/services/person.service';
 import { Accaunt } from 'src/entityes/auth/accaunt.entity';
 import { RoleService } from '../services/role.service';
 import { AccessesService } from '../services/accesses.service';
+import { OrgsService } from 'src/modules/dics/services/organization.service';
 
 @ApiTags('Аутентификация')
 @Controller('auth')
@@ -31,6 +32,7 @@ export class AuthController {
     private readonly personService: PersonService,
     private readonly roleService: RoleService,
     private readonly AccessService: AccessesService,
+    private readonly OrgService: OrgsService,
   ) {}
 
   @Post('/logout')
@@ -57,15 +59,21 @@ export class AuthController {
         .status(HttpStatus.BAD_REQUEST)
         .send({ message: ['Пользователь с таким именем существует'] });
     } else {
-      // создаем Персона для админа
-      const adminPerson = await this.personService.createAdmin();
-      const hash = await this.authService.hashedPassword('admin');
-
       // создаем главную роль разраба
       const role = await this.roleService.createRole({
         name: 'DEVELOP',
         title: 'Разработчик',
       });
+      // создаем организацию ЦАХО "Минтруда"
+      const org = await this.OrgService.createOrg({
+        name: 'ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ "ЦЕНТР АДМИНИСТРАТИВНО-ХОЗЯЙСТВЕННОГО ОБЕСПЕЧЕНИЯ МИНИСТЕРСТВА ТРУДА И СОЦИАЛЬНОЙ ПОЛИТИКИ РЕСПУБЛИКИ ТЫВА"',
+        short: 'ГБУ "ЦАХО МинТруда И СоцПол РТ"',
+        inn: 1701053789,
+      });
+      // создаем Персона для админа
+      const adminPerson = await this.personService.createAdmin(org);
+      // создаем пароль для админа
+      const hash = await this.authService.hashedPassword('admin');
       // создаем аккаунт админа
       await this.authService.createUser({
         login: 'admin',

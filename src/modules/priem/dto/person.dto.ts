@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 import { RootDto } from 'src/rootDto/root.dto';
 
@@ -17,6 +18,10 @@ export class PersonCreateDto extends RootDto {
 
   @ApiProperty({ required: false })
   otch?: string;
+
+  @ApiProperty({ required: false })
+  @Type(() => Number)
+  organization?: number;
 
   @ApiProperty({ required: false })
   dateBirth?: Date;
@@ -43,6 +48,9 @@ export class PersonUpdDto {
 
   @ApiProperty({ required: false })
   otch?: string;
+
+  @ApiProperty({ required: false })
+  organization?: number;
 
   @ApiProperty({ required: false })
   dateBirth?: Date;

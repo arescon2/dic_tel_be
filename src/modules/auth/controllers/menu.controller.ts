@@ -35,9 +35,7 @@ export class MenuController {
 
   @Get()
   async getMenu() {
-    const settings = [
-      
-    ]
+    const settings = [];
     return 'ok';
   }
 }

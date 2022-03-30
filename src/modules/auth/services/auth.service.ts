@@ -19,6 +19,7 @@ import _ from 'lodash';
 import { encode, decode } from 'js-base64';
 import { Person } from 'src/entityes/priem/person.entity';
 import { Roles } from 'src/entityes/auth/roles.entity';
+import { IdDto } from 'src/rootDto/idDto';
 
 export interface IJWTPayload {
   access_token: string;
@@ -127,6 +128,7 @@ export class AuthService {
           email: localData.email,
           roles: localData.roles,
           person: localData.person,
+          organization: localData.organization,
         }
       : {};
     return result;
@@ -136,6 +138,7 @@ export class AuthService {
     const result = await this.AccRep.createQueryBuilder('acc')
       .leftJoinAndSelect('acc.person', 'person')
       .leftJoinAndSelect('acc.roles', 'roles')
+      .leftJoinAndSelect('person.organization', 'organization')
       .where('acc.login = :login', { login: login })
       .select([
         'acc.id',
@@ -148,6 +151,10 @@ export class AuthService {
         'person.uid',
         'person.fam',
         'person.im',
+        'organization.name',
+        'organization.short',
+        'organization.id',
+        'organization.uid',
         'roles.id',
         'roles.name',
         'roles.title',
@@ -191,6 +198,8 @@ export class AuthService {
 
     const ordering = {};
 
+    if (orderby) ordering[orderby] = order;
+
     let andWhereVar = '';
     const andWhereObj = {};
 
@@ -207,12 +216,8 @@ export class AuthService {
 
     const result = await this.AccRep.createQueryBuilder('acc')
       .leftJoinAndSelect('acc.person', 'person')
-      .leftJoinAndSelect('acc.organization', 'org')
       .leftJoinAndSelect('acc.roles', 'roles')
       .where(andWhereVar, andWhereObj)
-      .take(take)
-      .offset(page)
-      .orderBy(ordering)
       .select([
         'acc.uid',
         'acc.id',
@@ -222,7 +227,6 @@ export class AuthService {
         'acc.email',
         'acc.phone',
         'acc.isActive',
-        'org.id',
         'person.id',
         'person.fam',
         'person.im',
@@ -230,6 +234,9 @@ export class AuthService {
         'roles.name',
         'roles.title',
       ])
+      .take(take)
+      .offset(page * take)
+      .orderBy('acc.id', 'ASC')
       .getManyAndCount();
 
     return result;

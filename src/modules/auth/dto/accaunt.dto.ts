@@ -35,9 +35,9 @@ export class UpdateAccuntDto {
   @ApiProperty({ required: false })
   email?: string;
 
-  @ApiProperty({ required: false })
-  @Type(() => Number)
-  organization?: number;
+  // @ApiProperty({ required: false })
+  // @Type(() => Number)
+  // organization?: number;
 }
 
 export class CreateAccauntDto extends LoginPassDto {
@@ -60,9 +60,9 @@ export class CreateAccauntDto extends LoginPassDto {
   })
   email: string;
 
-  @ApiProperty({ required: false })
-  @Type(() => Number)
-  organization?: number;
+  // @ApiProperty({ required: false })
+  // @Type(() => Number)
+  // organization?: number;
 }
 
 export class AddRolesToUserDto {

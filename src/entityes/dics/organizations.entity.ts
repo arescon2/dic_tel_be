@@ -10,6 +10,9 @@ export class Organization extends Root implements IOrganization {
   @Column({ nullable: true })
   name: string;
 
+  @Column({ nullable: true })
+  short?: string;
+
   @Column({ unique: true })
   inn: number;
 

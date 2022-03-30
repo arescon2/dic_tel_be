@@ -12,9 +12,13 @@ import {
   UsePipes,
   ValidationPipe,
   ParseIntPipe,
+  Req,
 } from '@nestjs/common';
+
+import _ from 'lodash';
+
 import { ApiCreatedResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { Person } from 'src/entityes/priem/person.entity';
 import { PaginFilterOrderClass } from 'src/rootDto/dtos';
 import { IdDto } from 'src/rootDto/idDto';
@@ -23,31 +27,41 @@ import { Roles } from '../../auth/roles.decorator';
 import { RolesGuard } from '../../auth/roles.guard';
 import { PersonCreateDto, PersonUpdDto } from '../dto/person.dto';
 import { PersonService } from '../services/person.service';
+import { OrgsService } from 'src/modules/dics/services/organization.service';
 
 @ApiTags('Пользователи')
 @Controller('person')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('ADMIN')
 export class PersonController {
-  constructor(private readonly personServ: PersonService) {}
+  constructor(
+    private readonly personServ: PersonService,
+    private readonly orgService: OrgsService,
+  ) {}
 
   @Get()
   @ApiCreatedResponse({ isArray: true, type: Person })
   async GetAll(
-    @Res() res: Response,
+    @Res() response: Response,
+    @Req() request: Request,
     @Query() query: PaginFilterOrderClass,
   ): Promise<any> {
     const { page, limit, orderby, order, filters } = query;
+
+    const _filters = filters ? JSON.parse(filters) : {};
+
+    if (!request.user['developer']) {
+      _filters.organization = request.user['person'].organization.id;
+    }
 
     const arrayAccaunt = await this.personServ.findPagination(
       page,
       limit,
       orderby,
       order,
-      filters,
+      _filters,
     );
 
-    res.status(HttpStatus.OK).send({
+    response.status(HttpStatus.OK).send({
       message: 'ok',
       data: arrayAccaunt[0],
       count: arrayAccaunt[1],
@@ -55,15 +69,20 @@ export class PersonController {
   }
 
   @Post()
-  @Roles('ADMIN')
   @ApiCreatedResponse({ type: Person })
   @UsePipes(new ValidationPipe())
-  async createPerson(@Body() data: PersonCreateDto): Promise<any> {
-    return this.personServ.createPerson(data);
+  async createPerson(
+    @Req() request: Request,
+    @Body() body: PersonCreateDto | any,
+  ): Promise<any> {
+    if (!request.user['developer']) {
+      body.organization = request.user['person'].organization.id;
+    }
+
+    return this.personServ.createPerson(body);
   }
 
   @Put()
-  @Roles('ADMIN')
   @UsePipes(new ValidationPipe())
   async updPerson(
     @Body() data: PersonUpdDto,

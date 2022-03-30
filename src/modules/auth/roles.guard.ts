@@ -30,7 +30,10 @@ export class RolesGuard implements CanActivate {
     // доступы будем проверять из redis
     // console.log(request.path);
 
-    if (DEVELOPER) return true;
+    if (DEVELOPER) {
+      request.user.developer = true;
+      return true;
+    }
 
     try {
       const requiredRoles = this.reflector.getAllAndOverride<string[]>(

@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import _ from 'lodash';
+import _, { toLower } from 'lodash';
 
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -42,19 +42,20 @@ export class OrgsService {
 
     if (filters) {
       if (filters.id) {
-        andWhereVar += 'organization.id = :id';
+        andWhereVar += 'organization.id = :id ';
         andWhereObj['id'] = filters.id;
       }
       if (filters.name) {
-        andWhereVar += 'organization.name like :name';
-        andWhereObj['name'] = `%${filters.name}%`;
+        andWhereVar +=
+          'LOWER(organization.name) like :name OR LOWER(organization.short) like :name';
+        andWhereObj['name'] = `%${_.toLower(filters.name)}%`;
       }
     }
 
     const result = await this.OrgsRep.createQueryBuilder('organization')
       .where(andWhereVar, andWhereObj)
       .take(take)
-      .offset(page * take)
+      .skip(page * take)
       .orderBy(ordering)
       .getManyAndCount();
 

@@ -61,25 +61,37 @@ export class AccauntController {
   @Post()
   @UsePipes(new ValidationPipe())
   async createAcc(
-    @Res() res: Response,
+    @Res() response: Response,
     @Body() body: CreateAccauntDto,
   ): Promise<any> {
-    // создаем Персона для админа
     const hash = await this.authService.hashedPassword(body.password);
 
     const person = await this.personService.Find({ id: body.person });
 
-    const organization = await this.orgService.Find(body.organization);
-
     // создаем аккаунт админа
-    const accaunt = await this.authService.createUser({
-      login: body.login,
-      email: body.email,
-      password: hash,
-      person: person,
-      organization: organization,
-    });
-    return accaunt;
+    await this.authService
+      .createUser({
+        login: body.login,
+        email: body.email,
+        password: hash,
+        person: person,
+      })
+      .then((res) => {
+        response.status(HttpStatus.OK).json({
+          message: 'ok',
+          data: {
+            uid: res.uid,
+            login: res.login,
+            email: res.email,
+          },
+        });
+      })
+      .catch((error) => {
+        response.status(HttpStatus.BAD_REQUEST).json({
+          message: 'error',
+          data: error,
+        });
+      });
   }
 
   // To Do: Редактировать аккаунт
@@ -96,7 +108,7 @@ export class AccauntController {
         id: id,
         login: body.login,
         email: body.email,
-        organization: body.organization,
+        // organization: body.organization,
         isActive: body.isActive,
       })
       .then((res) => {

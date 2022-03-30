@@ -2,6 +2,8 @@ import { IRoot } from 'src/interfaces/root.i';
 
 export interface IOrganization extends IRoot {
   name?: string;
+  short?: string;
+
   inn?: number;
   ogrn?: number;
 

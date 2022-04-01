@@ -109,6 +109,7 @@ export class AccauntController {
         login: body.login,
         email: body.email,
         // organization: body.organization,
+        roles: body.roles,
         isActive: body.isActive,
       })
       .then((res) => {
@@ -125,21 +126,5 @@ export class AccauntController {
           data: error,
         });
       });
-  }
-
-  // добавление роли для аккаунта
-  @Post('/roles')
-  @UsePipes(new ValidationPipe())
-  async addRolesToUser(@Body() data: AddRolesToUserDto): Promise<any> {
-    const result = await this.authService.addRolesToUser(data);
-    return result;
-  }
-
-  // добавление приложения для аккаунта
-  @Post('/apps')
-  @UsePipes(new ValidationPipe())
-  async addAppsToUser(@Body() data: AddRolesToUserDto): Promise<any> {
-    const result = await this.authService.addRolesToUser(data);
-    return result;
   }
 }

@@ -1,8 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Root } from 'src/entityes/root.entity';
 import { IPerson } from 'src/modules/priem/interfaces/person.i';
 import { ApiProperty } from '@nestjs/swagger';
 import { Organization } from '../dics/organizations.entity';
+import { Accaunt } from '../auth/accaunt.entity';
 
 @Entity({
   schema: 'persData',

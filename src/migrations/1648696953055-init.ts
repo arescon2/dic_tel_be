@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class init1648616392837 implements MigrationInterface {
-  name = 'init1648616392837';
+export class init1648696953055 implements MigrationInterface {
+  name = 'init1648696953055';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -23,7 +23,7 @@ export class init1648616392837 implements MigrationInterface {
       `CREATE TABLE "auth"."apps" ("id" SERIAL NOT NULL, "uid" character varying NOT NULL, "name" character varying NOT NULL, "descr" character varying, "exclude" boolean NOT NULL DEFAULT false, CONSTRAINT "PK_c5121fda0f8268f1f7f84134e19" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
-      `CREATE TABLE "auth"."accaunt" ("id" SERIAL NOT NULL, "uid" character varying NOT NULL, "dateCreate" TIMESTAMP NOT NULL, "dateUpd" TIMESTAMP, "isActive" boolean NOT NULL DEFAULT true, "email" character varying NOT NULL, "phone" integer, "login" character varying NOT NULL, "password" character varying NOT NULL, "exclude" boolean NOT NULL DEFAULT false, "personId" integer, CONSTRAINT "REL_87a2c4b4c33b4731522961f76d" UNIQUE ("personId"), CONSTRAINT "PK_376e43fa2d7f4a96eaf15b51ddc" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "auth"."accaunt" ("id" SERIAL NOT NULL, "uid" character varying NOT NULL, "dateCreate" TIMESTAMP NOT NULL, "dateUpd" TIMESTAMP, "isActive" boolean NOT NULL DEFAULT true, "email" character varying NOT NULL, "phone" integer, "login" character varying NOT NULL, "password" character varying NOT NULL, "exclude" boolean NOT NULL DEFAULT false, "personId" integer, CONSTRAINT "UQ_efbfddcd76e65522ae5783dc782" UNIQUE ("email"), CONSTRAINT "UQ_f705a393b1bb532bd1a798b595e" UNIQUE ("phone"), CONSTRAINT "UQ_6f950202b0da031b95edcf04aa9" UNIQUE ("login"), CONSTRAINT "REL_87a2c4b4c33b4731522961f76d" UNIQUE ("personId"), CONSTRAINT "PK_376e43fa2d7f4a96eaf15b51ddc" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "files" ("id" SERIAL NOT NULL, "uid" character varying NOT NULL, "dateCreate" TIMESTAMP NOT NULL, "dateUpd" TIMESTAMP, "isActive" boolean NOT NULL DEFAULT true, "name" character varying NOT NULL, "originalname" character varying NOT NULL, "type" character varying NOT NULL, "path" character varying NOT NULL, "size" integer NOT NULL, CONSTRAINT "PK_6c16b9093a142e0e7613b04a3d9" PRIMARY KEY ("id"))`,

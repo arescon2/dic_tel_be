@@ -261,18 +261,4 @@ export class AuthService {
 
     return this.AccRep.save(data);
   }
-
-  async addRolesToUser(inData: any): Promise<any> {
-    const accaunt = await this.AccRep.findOne({ where: { id: inData.id } });
-
-    const AccRoles = await this.roleRep.find({
-      where: { id: In(inData.roles) },
-    });
-
-    accaunt.roles = AccRoles;
-
-    accaunt.dateUpd = new Date(Date.now());
-
-    return this.AccRep.save(accaunt);
-  }
 }

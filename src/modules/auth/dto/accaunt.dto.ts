@@ -9,6 +9,7 @@ import {
   IsPhoneNumber,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { RoleCreateDto } from './role.dto';
 
 export class LoginPassDto extends RootDto {
   @ApiProperty()
@@ -38,6 +39,9 @@ export class UpdateAccuntDto {
   // @ApiProperty({ required: false })
   // @Type(() => Number)
   // organization?: number;
+
+  @ApiProperty({ required: false })
+  roles?: RoleCreateDto;
 }
 
 export class CreateAccauntDto extends LoginPassDto {

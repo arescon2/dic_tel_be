@@ -1,6 +1,15 @@
-import { Entity, Column, Tree, TreeChildren, TreeParent } from 'typeorm';
+import {
+  Entity,
+  Column,
+  Tree,
+  TreeChildren,
+  TreeParent,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 import { Root } from 'src/entityes/root.entity';
 import { IOrganization } from 'src/modules/dics/interfaces/organizations.i';
+import { Otdels } from './otdels.entity';
 
 @Entity({
   schema: 'dics',
@@ -36,6 +45,10 @@ export class Organization extends Root implements IOrganization {
 
   @TreeParent()
   parent: Organization;
+
+  @OneToMany(() => Otdels, (otdel) => otdel.id)
+  @JoinColumn()
+  otdels?: Otdels[];
 
   @Column({ nullable: false, default: false })
   exclude: boolean;

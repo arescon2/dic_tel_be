@@ -1,11 +1,14 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class init1648696953055 implements MigrationInterface {
-  name = 'init1648696953055';
+export class init1649058964206 implements MigrationInterface {
+  name = 'init1649058964206';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `CREATE TABLE "root" ("id" SERIAL NOT NULL, "uid" character varying NOT NULL, "dateCreate" TIMESTAMP NOT NULL, "dateUpd" TIMESTAMP, "isActive" boolean NOT NULL DEFAULT true, CONSTRAINT "PK_14c24f894f0be73529176098ea5" PRIMARY KEY ("id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "dics"."otdels" ("id" SERIAL NOT NULL, "name" character varying, "organizationId" integer, CONSTRAINT "PK_f85c0cdb0d7d81346feb44d683d" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE TABLE "dics"."organization" ("id" SERIAL NOT NULL, "uid" character varying NOT NULL, "dateCreate" TIMESTAMP NOT NULL, "dateUpd" TIMESTAMP, "isActive" boolean NOT NULL DEFAULT true, "name" character varying, "short" character varying, "inn" integer NOT NULL, "ogrn" integer, "address" character varying, "index" integer, "email" character varying, "tel" character varying, "exclude" boolean NOT NULL DEFAULT false, "parentId" integer, CONSTRAINT "UQ_be5034c484f8b7c7ffa151ef9f8" UNIQUE ("inn"), CONSTRAINT "PK_472c1f99a32def1b0abb219cd67" PRIMARY KEY ("id"))`,
@@ -63,6 +66,9 @@ export class init1648696953055 implements MigrationInterface {
     );
     await queryRunner.query(
       `CREATE INDEX "IDX_f51963aac115d526960ac74cf2" ON "organization_closure" ("id_descendant") `,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "dics"."otdels" ADD CONSTRAINT "FK_6e1bb6aebe500416d104a731a9d" FOREIGN KEY ("organizationId") REFERENCES "dics"."organization"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
       `ALTER TABLE "dics"."organization" ADD CONSTRAINT "FK_da6c3ae56a0c3fc3ce81b0e90a6" FOREIGN KEY ("parentId") REFERENCES "dics"."organization"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
@@ -133,6 +139,9 @@ export class init1648696953055 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "dics"."organization" DROP CONSTRAINT "FK_da6c3ae56a0c3fc3ce81b0e90a6"`,
     );
+    await queryRunner.query(
+      `ALTER TABLE "dics"."otdels" DROP CONSTRAINT "FK_6e1bb6aebe500416d104a731a9d"`,
+    );
     await queryRunner.query(`DROP INDEX "IDX_f51963aac115d526960ac74cf2"`);
     await queryRunner.query(`DROP INDEX "IDX_ea74b7c4a55b7887af4470ea46"`);
     await queryRunner.query(`DROP TABLE "organization_closure"`);
@@ -164,6 +173,7 @@ export class init1648696953055 implements MigrationInterface {
     await queryRunner.query(`DROP TABLE "auth"."accesses"`);
     await queryRunner.query(`DROP TABLE "persData"."person"`);
     await queryRunner.query(`DROP TABLE "dics"."organization"`);
+    await queryRunner.query(`DROP TABLE "dics"."otdels"`);
     await queryRunner.query(`DROP TABLE "root"`);
   }
 }

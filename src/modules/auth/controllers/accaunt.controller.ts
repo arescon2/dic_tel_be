@@ -80,6 +80,7 @@ export class AccauntController {
         response.status(HttpStatus.OK).json({
           message: 'ok',
           data: {
+            id: res.id,
             uid: res.uid,
             login: res.login,
             email: res.email,

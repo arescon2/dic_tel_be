@@ -102,20 +102,20 @@ export class AuthController {
     const user: { error: IError; data: IAccaunt } =
       await this.authService.checkAccaunt(data.login, data.password);
 
-    const DEVELOPER = user.data.roles.some((role: any) =>
-      ['DEVELOP'].includes(role.name),
-    );
-
-    if (!user.data.organization && !DEVELOPER) {
-      return res.status(HttpStatus.UNAUTHORIZED).send({
-        message: ['Ваша учетная запись не активированна'],
-        code: 'NotOrg',
-      });
-    }
-
     if (user.error.message.length > 0) {
       res.status(HttpStatus.UNAUTHORIZED).send({ message: user.error.message });
     } else {
+      const DEVELOPER = user.data.roles.some((role: any) =>
+        ['DEVELOP'].includes(role.name),
+      );
+
+      if (!user.data.person.organization && !DEVELOPER) {
+        return res.status(HttpStatus.UNAUTHORIZED).send({
+          message: ['Ваша учетная запись не активированна'],
+          code: 'NotOrg',
+        });
+      }
+
       const token = await this.authService.genJWT(user.data);
       const authCookies = this.authService.getCookieWithJwtToken(token);
 

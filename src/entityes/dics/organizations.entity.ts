@@ -46,8 +46,7 @@ export class Organization extends Root implements IOrganization {
   @TreeParent()
   parent: Organization;
 
-  @OneToMany(() => Otdels, (otdel) => otdel.id)
-  @JoinColumn()
+  @OneToMany(() => Otdels, (otdel) => otdel.organization)
   otdels?: Otdels[];
 
   @Column({ nullable: false, default: false })

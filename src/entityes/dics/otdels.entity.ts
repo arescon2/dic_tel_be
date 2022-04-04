@@ -18,7 +18,6 @@ export class Otdels implements IOtdels {
   @Column({ nullable: true })
   name: string;
 
-  @ManyToOne(() => Organization)
-  @JoinColumn()
+  @ManyToOne(() => Organization, (org) => org.otdels)
   organization?: Organization;
 }

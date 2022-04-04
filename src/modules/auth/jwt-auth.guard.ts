@@ -49,7 +49,7 @@ export class JwtAuthGuard implements CanActivate {
               email: user.email,
               roles: user.roles,
               person: user.person,
-              organization: user.organization,
+              organization: user.person.organization,
             }
           : {};
         request.user = _user;

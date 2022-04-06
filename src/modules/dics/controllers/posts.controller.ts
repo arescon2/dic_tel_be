@@ -17,7 +17,7 @@ import _ from 'lodash';
 import { Request, Response } from 'express';
 import { ApiCreatedResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
-import { PaginFilterOrderClass } from 'src/rootDto/dtos';
+import { NameDto, PaginFilterOrderClass } from 'src/rootDto/dtos';
 import { IdDto } from 'src/rootDto/idDto';
 import { Roles } from 'src/modules/auth/roles.decorator';
 import { OtdelsService } from '../services/otdels.service';
@@ -25,12 +25,14 @@ import { Otdels } from 'src/entityes/dics/otdels.entity';
 import { OtdelsCreateDto, OtdelsUpdateDto } from '../dto/otdels.dto';
 import { IRoles } from 'src/modules/auth/interfaces/roles.i';
 import { isDevelop } from 'src/libs';
+import { PostsService } from '../services/posts.service';
+import { Posts } from 'src/entityes/dics/posts.entity';
 
-@ApiTags('Справочники | Отделы организации')
-@Controller('otdels')
+@ApiTags('Справочники | Должности')
+@Controller('posts')
 @UseGuards(JwtAuthGuard)
-export class OtdelsController {
-  constructor(private readonly otdelsServices: OtdelsService) {}
+export class PostsController {
+  constructor(private readonly postServ: PostsService) {}
 
   @Get()
   async GetOtdels(
@@ -42,13 +44,7 @@ export class OtdelsController {
 
     const _filters = filters ? JSON.parse(filters) : {};
 
-    const roles: IRoles[] = request.user['roles'];
-    const develop = isDevelop(roles);
-
-    if (!develop)
-      _filters['organization'] = request.user['person'].organization.id;
-
-    const arrayData = await this.otdelsServices.findPagination(
+    const arrayData = await this.postServ.findPagination(
       page,
       limit,
       orderby,
@@ -64,39 +60,24 @@ export class OtdelsController {
   }
 
   @Post()
-  @ApiCreatedResponse({ type: Otdels })
+  @ApiCreatedResponse({ type: Posts })
   @UsePipes(new ValidationPipe())
   async createOrg(
-    @Body() data: OtdelsCreateDto,
+    @Body() data: NameDto,
     @Req() request: Request,
   ): Promise<any> {
-    const roles: IRoles[] = request.user['roles'];
-
-    const develop = isDevelop(roles);
-
-    if (!develop) data.organization = request.user['person'].organization.id;
-
-    return await this.otdelsServices.createOtdel(data);
-  }
-
-  @Put()
-  @ApiCreatedResponse({ type: Otdels })
-  @UsePipes(new ValidationPipe())
-  @Roles('ADMIN')
-  async updOrg(@Body() data: OtdelsUpdateDto): Promise<any> {
-    console.log(data);
-    return await this.otdelsServices.updOtdel(data);
+    return await this.postServ.createOtdel(data);
   }
 
   @Delete()
   @ApiQuery({ type: IdDto })
   @UsePipes(new ValidationPipe())
   @Roles('ADMIN')
-  async deleteFile(
+  async deletePost(
     @Query() query: IdDto,
     @Res() response: Response,
   ): Promise<any> {
-    await this.otdelsServices
+    await this.postServ
       .deleteOtdel(query.id)
       .then((res) => {
         response.status(HttpStatus.OK).json({

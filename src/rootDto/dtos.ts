@@ -12,3 +12,8 @@ export class PaginFilterOrderClass {
   @ApiProperty({ required: false })
   filters: string;
 }
+
+export class NameDto {
+  @ApiProperty()
+  name: string;
+}

@@ -2,11 +2,12 @@ import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  JoinColumn,
   ManyToOne,
+  OneToMany,
 } from 'typeorm';
 import { IOtdels } from 'src/modules/dics/interfaces/otdels.i';
 import { Organization } from './organizations.entity';
+import { Employee } from './employee.entity';
 
 @Entity({
   schema: 'dics',
@@ -20,4 +21,7 @@ export class Otdels implements IOtdels {
 
   @ManyToOne(() => Organization, (org) => org.otdels)
   organization?: Organization;
+
+  @OneToMany(() => Employee, (val) => val.otdel)
+  fields?: Employee[];
 }

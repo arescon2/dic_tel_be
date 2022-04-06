@@ -7,17 +7,19 @@ import { AppService } from './app.service';
 
 import { AuthModule } from './modules/auth/auth.module';
 import { CoreModule } from './modules/core/core.module';
+import { DicAppModule } from './modules/dicApp/dicApp.module';
 import { DicsModule } from './modules/dics/dics.module';
 import { PriemModule } from './modules/priem/priem.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot(),
+    // modules
     AuthModule,
     PriemModule,
     CoreModule,
     DicsModule,
-    // modules
+    DicAppModule,
   ],
   controllers: [AppController],
   providers: [AppService],

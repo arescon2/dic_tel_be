@@ -3,13 +3,15 @@ import { IRoot } from 'src/interfaces/root.i';
 import { IOtdels } from './otdels.i';
 
 export interface IFieldDic extends IRoot {
-  fio: string;
+  fam: string;
+  im: string;
+  otch?: string;
 
   position: IIdName;
   otdel: IOtdels;
 
-  mobile: number;
-  worktel: number;
+  mobile: string;
+  worktel: string;
 
   email?: string;
 }

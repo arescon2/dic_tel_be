@@ -17,21 +17,28 @@ import { Root } from '../root.entity';
 })
 export class Employee extends Root implements IFieldDic {
   @Column()
-  fio: string;
+  fam: string;
+  @Column()
+  im: string;
+  @Column({
+    nullable: true,
+  })
+  otch?: string;
 
-  @OneToOne(() => Posts)
-  @JoinColumn()
+  @ManyToOne(() => Posts, (val) => val.fields)
   position: Posts;
 
   @ManyToOne(() => Otdels, (val) => val.fields)
   otdel: Otdels;
 
   @Column()
-  mobile: number;
+  mobile: string;
 
   @Column()
-  worktel: number;
+  worktel: string;
 
-  @Column()
+  @Column({
+    nullable: true,
+  })
   email?: string;
 }

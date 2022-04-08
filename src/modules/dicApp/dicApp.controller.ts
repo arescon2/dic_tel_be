@@ -14,15 +14,20 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import _ from 'lodash';
-import { Request, Response } from 'express';
-import { ApiTags } from '@nestjs/swagger';
+import { query, Request, Response } from 'express';
+import { ApiCreatedResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { DicAppService } from './dicApp.service';
 import { IRoles } from '../auth/interfaces/roles.i';
 import { isDevelop } from 'src/libs';
+import { Employee } from 'src/entityes/dics/employee.entity';
+import { EmployeeCreateDto, EmployeeUpdateDto } from './dto/employee';
+import { IdDto } from 'src/rootDto/idDto';
+import { Roles } from '../auth/roles.decorator';
+import { PaginFilterOrderClass } from 'src/rootDto/dtos';
 
 @ApiTags('Приложение | Телефонный справочник')
-@Controller('dicapp')
+@Controller('employes')
 @UseGuards(JwtAuthGuard)
 export class DicApssController {
   constructor(private readonly dicAppService: DicAppService) {}
@@ -31,7 +36,9 @@ export class DicApssController {
   async getList(
     @Req() request: Request,
     @Res() response: Response,
+    @Query() query: PaginFilterOrderClass,
   ): Promise<any> {
+    const { page, limit, orderby, order, filters } = query;
     // получем список
     const roles: IRoles[] = request.user['roles'];
     const develop = isDevelop(roles);
@@ -39,6 +46,7 @@ export class DicApssController {
     const data = await this.dicAppService.getListRoot(
       develop,
       request.user['person'].organization,
+      filters ? JSON.parse(filters) : {},
     );
     response.status(HttpStatus.OK).send({
       message: 'ok',
@@ -46,5 +54,49 @@ export class DicApssController {
     });
 
     return '';
+  }
+
+  @Post()
+  @ApiCreatedResponse({ type: Employee })
+  @UsePipes(new ValidationPipe())
+  async createEmployee(@Body() body: EmployeeCreateDto): Promise<any> {
+    return this.dicAppService.createEmployee(body);
+  }
+
+  @Put()
+  @UsePipes(new ValidationPipe())
+  async updEmployee(
+    @Body() data: EmployeeUpdateDto,
+    @Res() res: Response,
+  ): Promise<any> {
+    const employee = await this.dicAppService.updEmployee(data);
+
+    res.status(HttpStatus.OK).send({
+      message: 'ok',
+      data: employee,
+    });
+  }
+
+  @Delete()
+  @ApiQuery({ type: IdDto })
+  @UsePipes(new ValidationPipe({ transform: true }))
+  async deleteFile(
+    @Query() query: IdDto,
+    @Res() response: Response,
+  ): Promise<any> {
+    await this.dicAppService
+      .DelOne(query.id)
+      .then((res) => {
+        response.status(HttpStatus.OK).json({
+          message: 'ok',
+          data: res,
+        });
+      })
+      .catch((error) => {
+        response.status(HttpStatus.BAD_REQUEST).json({
+          message: 'error',
+          data: error,
+        });
+      });
   }
 }

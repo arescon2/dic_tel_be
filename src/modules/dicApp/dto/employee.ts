@@ -1,12 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import { IsNotEmpty } from 'class-validator';
 
 export class EmployeeCreateDto {
   @ApiProperty()
   @IsNotEmpty({
-    message: 'Поле "ФИО" не может быть пустым',
+    message: 'Поле "Фамилия" не может быть пустым',
   })
-  fio: string;
+  fam: string;
+
+  @ApiProperty()
+  @IsNotEmpty({
+    message: 'Поле "Имя" не может быть пустым',
+  })
+  im: string;
+
+  @ApiProperty({ required: false })
+  otch?: string;
 
   @ApiProperty()
   @IsNotEmpty({
@@ -24,13 +34,13 @@ export class EmployeeCreateDto {
   @IsNotEmpty({
     message: 'Поле "Мобильный телефон" не может быть пустым',
   })
-  mobile: number;
+  mobile: string;
 
   @ApiProperty()
   @IsNotEmpty({
     message: 'Поле "Рабочий телефон" не может быть пустым',
   })
-  worktel: number;
+  worktel: string;
 
   @ApiProperty({ required: false })
   email?: string;
@@ -38,16 +48,22 @@ export class EmployeeCreateDto {
 
 export class EmployeeUpdateDto {
   @ApiProperty({ required: false })
-  fio?: string;
+  fam?: string;
+
+  @ApiProperty({ required: false })
+  im?: string;
+
+  @ApiProperty({ required: false })
+  otch?: string;
 
   @ApiProperty({ required: false })
   position?: number;
 
   @ApiProperty({ required: false })
-  mobile?: number;
+  mobile?: string;
 
   @ApiProperty({ required: false })
-  worktel?: number;
+  worktel?: string;
 
   @ApiProperty({ required: false })
   email?: string;

@@ -26,12 +26,12 @@ export class DicAppService {
     let andWhereVar = '';
     const andWhereObj = {};
 
-    if (!dev) {
-      andWhereVar += 'orgs.id = :id ';
-      andWhereObj['id'] = userOrg.id;
-    }
-
     if (filters) {
+      if (filters.myorg) {
+        andWhereVar += ' orgs.id = :id ';
+        andWhereObj['id'] = userOrg.id;
+      }
+
       if (filters.fio) {
         const d = filters.fio.split(' ');
 
@@ -58,12 +58,14 @@ export class DicAppService {
           : null;
         otch ? (andWhereObj['otch'] = `%${_.toLower(otch)}%`) : null;
       }
+
       if (filters.organization) {
         andWhereVar +=
           (andWhereVar.length > 1 ? 'AND' : '') +
           ' (LOWER(orgs.name) like :organization OR LOWER(orgs.short) like :organization) ';
         andWhereObj['organization'] = `%${_.toLower(filters.organization)}%`;
       }
+
       if (filters.position) {
         andWhereVar +=
           (andWhereVar.length > 1 ? 'AND' : '') + ' post.id = :position ';
@@ -91,8 +93,10 @@ export class DicAppService {
     return this.EmployeeRep.save(newEmployee);
   }
 
-  async updEmployee(inData: any): Promise<Employee> {
-    let data = await this.EmployeeRep.findOne({ where: { id: inData.id } });
+  async updEmployee(id: number, inData: any): Promise<Employee> {
+    let data = await this.EmployeeRep.findOne({ where: { id: id } });
+
+    if (!data) return this.EmployeeRep.findOneOrFail({ where: { id: id } });
 
     data = Object.assign(data, inData);
     data.dateUpd = new Date(Date.now());

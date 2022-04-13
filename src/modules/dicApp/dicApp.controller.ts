@@ -13,7 +13,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import _ from 'lodash';
+import _, { toInteger } from 'lodash';
 import { query, Request, Response } from 'express';
 import { ApiCreatedResponse, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
@@ -64,12 +64,17 @@ export class DicApssController {
   }
 
   @Put()
+  @ApiQuery({ type: IdDto })
   @UsePipes(new ValidationPipe())
   async updEmployee(
+    @Query('id') id: number,
     @Body() data: EmployeeUpdateDto,
     @Res() res: Response,
   ): Promise<any> {
-    const employee = await this.dicAppService.updEmployee(data);
+    const employee = await this.dicAppService.updEmployee(
+      _.toInteger(id),
+      data,
+    );
 
     res.status(HttpStatus.OK).send({
       message: 'ok',

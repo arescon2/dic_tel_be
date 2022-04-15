@@ -5,9 +5,11 @@ import cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
 import { LoggingInterceptor } from './modules/auth/interceptors/logging.interceptor';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   const config = new DocumentBuilder()
     .setTitle('Project')
@@ -22,6 +24,8 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
 
   app.useGlobalInterceptors(new LoggingInterceptor());
+
+  app.useStaticAssets(join(__dirname, '../uploads'));
 
   app.use(cookieParser());
 

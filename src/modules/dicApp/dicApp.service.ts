@@ -98,8 +98,12 @@ export class DicAppService {
 
     if (!data) return this.EmployeeRep.findOneOrFail({ where: { id: id } });
 
+    console.log(data);
+
     data = Object.assign(data, inData);
     data.dateUpd = new Date(Date.now());
+
+    console.log(data);
 
     return this.EmployeeRep.save(data);
   }

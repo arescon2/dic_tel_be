@@ -43,16 +43,16 @@ export class OtdelsService {
 
     if (filters) {
       if (filters.id) {
-        andWhereVar += 'otdels.id = :id ';
+        andWhereVar += ' otdels.id = :id ';
         andWhereObj['id'] = filters.id;
       }
       if (filters.name) {
         andWhereVar +=
-          'LOWER(otdels.name) like :name OR LOWER(otdels.short) like :name';
+          ' LOWER(otdels.name) like :name OR LOWER(otdels.short) like :name ';
         andWhereObj['name'] = `%${_.toLower(filters.name)}%`;
       }
       if (filters.organization) {
-        andWhereVar += 'orgs.id = :organization';
+        andWhereVar += ' orgs.id = :organization ';
         andWhereObj['organization'] = filters.organization;
       }
     }

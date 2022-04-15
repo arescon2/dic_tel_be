@@ -60,6 +60,9 @@ export class EmployeeUpdateDto {
   position?: number;
 
   @ApiProperty({ required: false })
+  otdel?: number;
+
+  @ApiProperty({ required: false })
   mobile?: string;
 
   @ApiProperty({ required: false })

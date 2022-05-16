@@ -1,5 +1,6 @@
 import { IRoot } from 'src/interfaces/root.i';
 import { IOrganization } from 'src/modules/dics/interfaces/organizations.i';
+import { Iissue } from 'src/modules/tickets/interfaces/ticket.i';
 
 export interface IPerson extends IRoot {
   fam?: string;
@@ -12,4 +13,6 @@ export interface IPerson extends IRoot {
 
   sex?: number;
   sexText?: string;
+
+  issues?: Iissue;
 }

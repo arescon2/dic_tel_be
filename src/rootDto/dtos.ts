@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 export class PaginFilterOrderClass {
   @ApiProperty({ required: false })
@@ -15,5 +16,13 @@ export class PaginFilterOrderClass {
 
 export class NameDto {
   @ApiProperty()
+  @IsNotEmpty({
+    message: 'Поле "Цвет" не может быть пустым',
+  })
+  name: string;
+}
+
+export class NameUpdDto {
+  @ApiProperty({ required: false })
   name: string;
 }

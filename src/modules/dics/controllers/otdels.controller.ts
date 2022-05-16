@@ -84,7 +84,6 @@ export class OtdelsController {
   @UsePipes(new ValidationPipe())
   @Roles('ADMIN')
   async updOrg(@Body() data: OtdelsUpdateDto): Promise<any> {
-    console.log(data);
     return await this.otdelsServices.updOtdel(data);
   }
 

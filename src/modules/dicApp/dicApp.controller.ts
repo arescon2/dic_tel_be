@@ -21,7 +21,7 @@ import { DicAppService } from './dicApp.service';
 import { IRoles } from '../auth/interfaces/roles.i';
 import { isDevelop } from 'src/libs';
 import { Employee } from 'src/entityes/dics/employee.entity';
-import { EmployeeCreateDto, EmployeeUpdateDto } from './dto/employee';
+import { EmployeeCreateDto, EmployeeUpdateDto } from './dto/employee.dto';
 import { IdDto } from 'src/rootDto/idDto';
 import { Roles } from '../auth/roles.decorator';
 import { PaginFilterOrderClass } from 'src/rootDto/dtos';

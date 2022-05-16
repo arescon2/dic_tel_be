@@ -5,7 +5,6 @@ import {
   Get,
   HttpStatus,
   Post,
-  Put,
   Query,
   Req,
   Res,
@@ -20,11 +19,6 @@ import { JwtAuthGuard } from 'src/modules/auth/jwt-auth.guard';
 import { NameDto, PaginFilterOrderClass } from 'src/rootDto/dtos';
 import { IdDto } from 'src/rootDto/idDto';
 import { Roles } from 'src/modules/auth/roles.decorator';
-import { OtdelsService } from '../services/otdels.service';
-import { Otdels } from 'src/entityes/dics/otdels.entity';
-import { OtdelsCreateDto, OtdelsUpdateDto } from '../dto/otdels.dto';
-import { IRoles } from 'src/modules/auth/interfaces/roles.i';
-import { isDevelop } from 'src/libs';
 import { PostsService } from '../services/posts.service';
 import { Posts } from 'src/entityes/dics/posts.entity';
 
